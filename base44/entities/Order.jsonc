@@ -1,0 +1,56 @@
+{
+  "name": "Order",
+  "type": "object",
+  "properties": {
+    "product_id": {
+      "type": "string",
+      "description": "ID of the purchased product"
+    },
+    "product_name": {
+      "type": "string",
+      "description": "Name of the product"
+    },
+    "quantity": {
+      "type": "number",
+      "default": 1
+    },
+    "total_amount": {
+      "type": "number",
+      "description": "Total order amount"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "visa",
+        "mastercard",
+        "alipay_plus"
+      ],
+      "description": "Payment method used"
+    },
+    "buyer_email": {
+      "type": "string",
+      "description": "Buyer email for receipt"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "shipped",
+        "delivered"
+      ],
+      "default": "pending"
+    },
+    "receipt_sent": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "product_id",
+    "product_name",
+    "total_amount",
+    "payment_method",
+    "buyer_email"
+  ]
+}

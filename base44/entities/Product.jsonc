@@ -1,0 +1,65 @@
+{
+  "name": "Product",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Product name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Product description"
+    },
+    "price": {
+      "type": "number",
+      "description": "Product price in USD"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "nearly_sold_out",
+        "sold_out"
+      ],
+      "default": "available",
+      "description": "Product availability status"
+    },
+    "images": {
+      "type": "array",
+      "description": "Product image URLs (minimum 5)",
+      "items": {
+        "type": "string"
+      }
+    },
+    "seller_email": {
+      "type": "string",
+      "description": "Email of the seller"
+    },
+    "published": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the product is published"
+    },
+    "ai_scan_result": {
+      "type": "string",
+      "enum": [
+        "passed",
+        "failed_different",
+        "failed_similar",
+        "pending"
+      ],
+      "default": "pending",
+      "description": "AI image scan result"
+    },
+    "category": {
+      "type": "string",
+      "description": "Product category"
+    }
+  },
+  "required": [
+    "name",
+    "description",
+    "price",
+    "images"
+  ]
+}
