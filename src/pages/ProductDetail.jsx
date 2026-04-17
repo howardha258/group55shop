@@ -7,6 +7,7 @@ import StatusBadge from '../components/shop/StatusBadge';
 import { useCart } from '../components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, ArrowLeft, Minus, Plus, User } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -22,6 +23,14 @@ export default function ProductDetail() {
   });
 
   const product = products[0];
+
+  const { data: sellerData = [] } = useQuery({
+    queryKey: ['seller', product?.seller_email],
+    queryFn: () => base44.entities.User.filter({ email: product.seller_email }),
+    enabled: !!product?.seller_email,
+  });
+
+  const seller = sellerData[0];
 
   if (isLoading) {
     return (
@@ -88,6 +97,27 @@ export default function ProductDetail() {
 
           <p className="text-muted-foreground leading-relaxed">{product.description}</p>
 
+          {/* Seller Info */}
+          {product.seller_email && (
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full overflow-hidden bg-muted border border-border shrink-0">
+                {seller?.profile_picture ? (
+                  <img src={seller.profile_picture} alt="Seller" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-sm font-bold text-muted-foreground">
+                    {(seller?.username || seller?.full_name || product.seller_email)[0].toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Sold by</p>
+                <p className="text-sm font-medium">{seller?.username || seller?.full_name || product.seller_email}</p>
+              </div>
+            </div>
+          )}
+
+          <Separator />
+
           {product.status !== 'sold_out' && (
             <div className="flex items-center gap-4">
               <div className="flex items-center border rounded-lg">
@@ -131,11 +161,6 @@ export default function ProductDetail() {
               Category: <span className="font-medium">{product.category}</span>
             </p>
           )}
-
-          <div className="flex items-center gap-2 pt-1 text-sm text-muted-foreground border-t pt-4">
-            <User className="w-4 h-4 shrink-0" />
-            <span>Sold by <span className="font-medium text-foreground">{product.seller_email || 'Unknown seller'}</span></span>
-          </div>
         </motion.div>
       </div>
     </div>
