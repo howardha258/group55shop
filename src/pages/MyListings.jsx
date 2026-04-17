@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Package, Plus, Pencil, Trash2, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -24,6 +25,7 @@ import {
 
 export default function MyListings() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: user } = useQuery({
     queryKey: ['me'],
@@ -119,6 +121,10 @@ export default function MyListings() {
                     <SelectItem value="sold_out">Sold Out</SelectItem>
                   </SelectContent>
                 </Select>
+
+                <Button variant="ghost" size="icon" onClick={() => navigate(`/edit-product/${product.id}`)}>
+                  <Pencil className="w-4 h-4" />
+                </Button>
 
                 <AlertDialog>
                   <AlertDialogTrigger asChild>

@@ -15,6 +15,7 @@ import Checkout from './pages/Checkout';
 import SellProduct from './pages/SellProduct';
 import MyListings from './pages/MyListings';
 import Account from './pages/Account';
+import EditProduct from './pages/EditProduct';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -46,6 +47,7 @@ const AuthenticatedApp = () => {
         <Route path="/sell" element={<SellProduct />} />
         <Route path="/my-listings" element={<MyListings />} />
         <Route path="/account" element={<Account />} />
+        <Route path="/edit-product/:id" element={<EditProduct />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
