@@ -1,0 +1,50 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "user"
+      ],
+      "default": "user"
+    },
+    "username": {
+      "type": "string",
+      "description": "Display username"
+    },
+    "profile_picture": {
+      "type": "string",
+      "description": "Profile picture URL"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Short user bio"
+    },
+    "company_name": {
+      "type": "string",
+      "description": "Official company name if verified"
+    },
+    "company_document_url": {
+      "type": "string",
+      "description": "URL of the uploaded company verification document"
+    },
+    "company_verified": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user has been verified as an official company representative"
+    },
+    "company_verification_status": {
+      "type": "string",
+      "enum": [
+        "none",
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "none",
+      "description": "Status of the company verification submission"
+    }
+  }
+}

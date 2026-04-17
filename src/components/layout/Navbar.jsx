@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Store, Package, ShoppingCart } from 'lucide-react';
+import { ShoppingBag, Store, Package, ShoppingCart, UserCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
@@ -11,6 +11,7 @@ export default function Navbar({ cartCount = 0 }) {
     { path: '/', label: 'Shop', icon: ShoppingBag },
     { path: '/sell', label: 'Sell', icon: Store },
     { path: '/my-listings', label: 'My Listings', icon: Package },
+    { path: '/account', label: 'Account', icon: UserCircle },
   ];
 
   return (

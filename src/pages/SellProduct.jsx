@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 import ImageUploader from '../components/sell/ImageUploader';
 import AiScanResult from '../components/sell/AiScanResult';
 import { Button } from '@/components/ui/button';
@@ -8,8 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ScanEye, Loader2, Send, Tag, FileText, DollarSign } from 'lucide-react';
+import { ScanEye, Loader2, Send, Tag, FileText, DollarSign, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
@@ -26,7 +28,15 @@ export default function SellProduct() {
   const [scanning, setScanning] = useState(false);
   const [publishing, setPublishing] = useState(false);
 
-  const canScan = images.length >= 5;
+  const { data: user } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => base44.auth.me(),
+  });
+
+  const isVerifiedCompany = user?.company_verification_status === 'approved';
+  const minImages = isVerifiedCompany ? 3 : 5;
+
+  const canScan = images.length >= minImages;
   const canPublish = canScan && scanStatus === 'passed' && name && description && price;
 
   const handleScanImages = async () => {
@@ -46,7 +56,7 @@ Product description: "${description}"
 
 Your task:
 1. Check if ALL images are relevant to the described product. If any image shows something completely different from the product, it fails.
-2. Check if the images are too similar to each other (e.g., same exact photo duplicated, or nearly identical angles with negligible differences). We need at least 3 clearly distinct perspectives/angles.
+2. Check if the images are too similar to each other (e.g., same exact photo duplicated, or nearly identical angles with negligible differences). We need at least ${minImages} clearly distinct perspectives/angles.
 
 Respond with a JSON object.`,
       file_urls: images,
@@ -108,8 +118,20 @@ Respond with a JSON object.`,
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="font-display text-3xl font-bold">Sell a Product</h1>
-        <p className="text-muted-foreground mt-1">List your product with AI-verified images</p>
+        <div className="flex items-center gap-3 flex-wrap">
+          <h1 className="font-display text-3xl font-bold">Sell a Product</h1>
+          {isVerifiedCompany && (
+            <Badge className="bg-green-100 text-green-700 border-green-200 border gap-1">
+              <ShieldCheck className="w-3.5 h-3.5" /> Verified Company — 3 images required
+            </Badge>
+          )}
+        </div>
+        <p className="text-muted-foreground mt-1">
+          List your product with AI-verified images
+          {!isVerifiedCompany && (
+            <> · <Link to="/account" className="text-accent underline underline-offset-2 hover:no-underline">Verify your company</Link> to reduce image requirement to 3</>
+          )}
+        </p>
       </motion.div>
 
       {/* Basic Info */}
@@ -153,7 +175,7 @@ Respond with a JSON object.`,
 
       {/* Image Upload */}
       <Card className="p-5">
-        <ImageUploader images={images} onImagesChange={setImages} minImages={5} />
+        <ImageUploader images={images} onImagesChange={setImages} minImages={minImages} />
       </Card>
 
       {/* AI Scan */}
