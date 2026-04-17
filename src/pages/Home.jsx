@@ -4,14 +4,13 @@ import { useQuery } from '@tanstack/react-query';
 import ProductCard from '../components/shop/ProductCard';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { motion } from 'framer-motion';
 
 export default function Home() {
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
 
   const { data: products = [], isLoading } = useQuery({
@@ -23,9 +22,8 @@ export default function Home() {
 
   const filtered = products.filter(p => {
     const matchesSearch = !search || p.name?.toLowerCase().includes(search.toLowerCase()) || p.description?.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
     const matchesCategory = categoryFilter === 'all' || p.category === categoryFilter;
-    return matchesSearch && matchesStatus && matchesCategory;
+    return matchesSearch && matchesCategory;
   });
 
   return (
@@ -67,18 +65,7 @@ export default function Home() {
             ))}
           </SelectContent>
         </Select>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-full sm:w-48">
-            <SlidersHorizontal className="w-4 h-4 mr-2" />
-            <SelectValue placeholder="Filter status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="available">Available</SelectItem>
-            <SelectItem value="nearly_sold_out">Almost Gone</SelectItem>
-            <SelectItem value="sold_out">Sold Out</SelectItem>
-          </SelectContent>
-        </Select>
+
       </div>
 
       {/* Products Grid */}
