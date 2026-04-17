@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
+import { useCurrency } from '@/hooks/useCurrency';
 
 const statusConfig = {
   available: { label: 'Available', className: 'bg-green-100 text-green-700 border-green-200' },
@@ -12,6 +13,7 @@ const statusConfig = {
 
 export default function ProductCard({ product, index = 0 }) {
   const status = statusConfig[product.status] || statusConfig.available;
+  const { format } = useCurrency();
 
   return (
     <motion.div
@@ -43,7 +45,7 @@ export default function ProductCard({ product, index = 0 }) {
             </h3>
             <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{product.description}</p>
             <p className="mt-3 text-lg font-bold font-display text-foreground">
-              ${product.price?.toFixed(2)}
+              {format(product.price || 0)}
             </p>
           </div>
         </Card>

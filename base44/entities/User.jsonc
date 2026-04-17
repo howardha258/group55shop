@@ -22,6 +22,14 @@
       "type": "string",
       "description": "Short user bio"
     },
+    "mobile": {
+      "type": "string",
+      "description": "Mobile phone number for security"
+    },
+    "region": {
+      "type": "string",
+      "description": "Preferred region/currency code (e.g. USD, HKD, EUR)"
+    },
     "company_name": {
       "type": "string",
       "description": "Official company name if verified"

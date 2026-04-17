@@ -8,10 +8,24 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   User, Mail, Camera, Loader2, Save, Building2,
-  FileText, CheckCircle, Clock, XCircle, Upload, ShieldCheck
+  FileText, CheckCircle, Clock, XCircle, Upload, ShieldCheck, Smartphone, Globe
 } from 'lucide-react';
+
+const REGIONS = [
+  { code: 'USD', label: '🇺🇸 USD — US Dollar' },
+  { code: 'HKD', label: '🇭🇰 HKD — Hong Kong Dollar' },
+  { code: 'EUR', label: '🇪🇺 EUR — Euro' },
+  { code: 'GBP', label: '🇬🇧 GBP — British Pound' },
+  { code: 'CNY', label: '🇨🇳 CNY — Chinese Yuan' },
+  { code: 'JPY', label: '🇯🇵 JPY — Japanese Yen' },
+  { code: 'KRW', label: '🇰🇷 KRW — Korean Won' },
+  { code: 'AUD', label: '🇦🇺 AUD — Australian Dollar' },
+  { code: 'CAD', label: '🇨🇦 CAD — Canadian Dollar' },
+  { code: 'SGD', label: '🇸🇬 SGD — Singapore Dollar' },
+];
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
@@ -32,15 +46,20 @@ export default function Account() {
 
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [region, setRegion] = useState('USD');
   const [companyName, setCompanyName] = useState('');
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingDoc, setUploadingDoc] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [savingPrefs, setSavingPrefs] = useState(false);
 
   useEffect(() => {
     if (user) {
       setUsername(user.username || user.full_name || '');
       setBio(user.bio || '');
+      setMobile(user.mobile || '');
+      setRegion(user.region || 'USD');
       setCompanyName(user.company_name || '');
     }
   }, [user]);
@@ -78,6 +97,14 @@ export default function Account() {
     queryClient.invalidateQueries({ queryKey: ['me'] });
     toast.success('Profile saved');
     setSaving(false);
+  };
+
+  const handleSavePrefs = async () => {
+    setSavingPrefs(true);
+    await base44.auth.updateMe({ mobile, region });
+    queryClient.invalidateQueries({ queryKey: ['me'] });
+    toast.success('Security & preferences saved');
+    setSavingPrefs(false);
   };
 
   if (isLoading) {
@@ -167,6 +194,49 @@ export default function Account() {
         <Button onClick={handleSaveProfile} disabled={saving} className="gap-2">
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           Save Profile
+        </Button>
+      </Card>
+
+      {/* Security & Preferences */}
+      <Card className="p-6 space-y-5">
+        <h2 className="font-semibold flex items-center gap-2"><Smartphone className="w-4 h-4" /> Security &amp; Preferences</h2>
+
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="mobile" className="flex items-center gap-2">
+              <Smartphone className="w-4 h-4" /> Mobile Number
+            </Label>
+            <Input
+              id="mobile"
+              type="tel"
+              placeholder="+1 234 567 8900"
+              value={mobile}
+              onChange={(e) => setMobile(e.target.value)}
+            />
+            <p className="text-xs text-muted-foreground">Used for account security and login verification.</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Globe className="w-4 h-4" /> Region &amp; Currency
+            </Label>
+            <Select value={region} onValueChange={setRegion}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select your region" />
+              </SelectTrigger>
+              <SelectContent>
+                {REGIONS.map(r => (
+                  <SelectItem key={r.code} value={r.code}>{r.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">Product prices will be displayed in your selected currency.</p>
+          </div>
+        </div>
+
+        <Button onClick={handleSavePrefs} disabled={savingPrefs} className="gap-2">
+          {savingPrefs ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+          Save Preferences
         </Button>
       </Card>
 

@@ -7,6 +7,7 @@ import StatusBadge from '../components/shop/StatusBadge';
 import { useCart } from '../components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, ArrowLeft, Minus, Plus, User, BadgeCheck } from 'lucide-react';
+import { useCurrency } from '@/hooks/useCurrency';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
@@ -23,6 +24,8 @@ export default function ProductDetail() {
   });
 
   const product = products[0];
+
+  const { format } = useCurrency();
 
   const { data: sellerData = [] } = useQuery({
     queryKey: ['seller', product?.seller_email],
@@ -91,7 +94,7 @@ export default function ProductDetail() {
             <StatusBadge status={product.status} />
             <h1 className="font-display text-3xl sm:text-4xl font-bold mt-3">{product.name}</h1>
             <p className="text-3xl font-bold font-display text-accent mt-4">
-              ${product.price?.toFixed(2)}
+              {format(product.price || 0)}
             </p>
           </div>
 
