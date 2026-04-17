@@ -6,7 +6,7 @@ import ImageGallery from '../components/shop/ImageGallery';
 import StatusBadge from '../components/shop/StatusBadge';
 import { useCart } from '../components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, ArrowLeft, Minus, Plus } from 'lucide-react';
+import { ShoppingCart, ArrowLeft, Minus, Plus, User } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -131,6 +131,11 @@ export default function ProductDetail() {
               Category: <span className="font-medium">{product.category}</span>
             </p>
           )}
+
+          <div className="flex items-center gap-2 pt-1 text-sm text-muted-foreground border-t pt-4">
+            <User className="w-4 h-4 shrink-0" />
+            <span>Sold by <span className="font-medium text-foreground">{product.seller_email || 'Unknown seller'}</span></span>
+          </div>
         </motion.div>
       </div>
     </div>
