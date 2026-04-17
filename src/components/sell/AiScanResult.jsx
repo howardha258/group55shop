@@ -40,8 +40,11 @@ const configs = {
   },
 };
 
-export default function AiScanResult({ status, details }) {
-  const config = configs[status] || configs.pending;
+export default function AiScanResult({ status, details, minImages = 5 }) {
+  const config = {
+    ...(configs[status] || configs.pending),
+    ...(status === 'pending' ? { description: `Upload at least ${minImages} images and click "Scan Images" to verify.` } : {}),
+  };
   const Icon = config.icon;
 
   return (

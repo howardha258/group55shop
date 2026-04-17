@@ -41,7 +41,7 @@ export default function SellProduct() {
 
   const handleScanImages = async () => {
     if (!canScan) {
-      toast.error('Please upload at least 5 images first');
+      toast.error(`Please upload at least ${minImages} images first`);
       return;
     }
 
@@ -181,7 +181,7 @@ Respond with a JSON object.`,
       </Card>
 
       {/* AI Scan */}
-      <AiScanResult status={scanStatus} details={scanDetails} />
+      <AiScanResult status={scanStatus} details={scanDetails} minImages={minImages} />
 
       <div className="flex gap-3">
         <Button
