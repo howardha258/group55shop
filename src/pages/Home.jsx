@@ -12,16 +12,20 @@ import { motion } from 'framer-motion';
 export default function Home() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['products'],
     queryFn: () => base44.entities.Product.filter({ published: true }),
   });
 
+  const categories = ['all', ...Array.from(new Set(products.map(p => p.category).filter(Boolean)))];
+
   const filtered = products.filter(p => {
     const matchesSearch = !search || p.name?.toLowerCase().includes(search.toLowerCase()) || p.description?.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesCategory = categoryFilter === 'all' || p.category === categoryFilter;
+    return matchesSearch && matchesStatus && matchesCategory;
   });
 
   return (
@@ -51,6 +55,18 @@ export default function Home() {
             className="pl-10"
           />
         </div>
+        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <SelectTrigger className="w-full sm:w-48">
+            <SelectValue placeholder="All Categories" />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map(cat => (
+              <SelectItem key={cat} value={cat}>
+                {cat === 'all' ? 'All Categories' : cat}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-full sm:w-48">
             <SlidersHorizontal className="w-4 h-4 mr-2" />
