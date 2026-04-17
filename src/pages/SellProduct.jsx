@@ -49,14 +49,16 @@ export default function SellProduct() {
     setScanStatus('scanning');
 
     const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `You are an AI image verification system for an e-commerce platform. Analyze these ${images.length} product images.
+      prompt: `You are a lenient AI image verification system for an e-commerce platform. Analyze these ${images.length} product images.
 
 Product name: "${name}"
 Product description: "${description}"
 
-Your task:
-1. Check if ALL images are relevant to the described product. If any image shows something completely different from the product, it fails.
-2. Check if the images are too similar to each other (e.g., same exact photo duplicated, or nearly identical angles with negligible differences). We need at least ${minImages} clearly distinct perspectives/angles.
+Your task — be generous and only fail in obvious cases:
+1. RELEVANCE: Only fail (failed_different) if an image is COMPLETELY unrelated to the product — e.g. a random landscape, a person with no relation, or a totally different category of item. If there is any reasonable connection to the product, it passes.
+2. UNIQUENESS: Only fail (failed_similar) if images are EXACT duplicates (literally the same file repeated) or near-identical copies with no meaningful difference. Different angles, lighting, backgrounds, or zoom levels are all fine and should PASS.
+
+When in doubt, always pass. Only reject if the violation is blatant and obvious.
 
 Respond with a JSON object.`,
       file_urls: images,
