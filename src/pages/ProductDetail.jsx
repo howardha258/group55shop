@@ -6,7 +6,7 @@ import ImageGallery from '../components/shop/ImageGallery';
 import StatusBadge from '../components/shop/StatusBadge';
 import { useCart } from '../components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, ArrowLeft, Minus, Plus, User } from 'lucide-react';
+import { ShoppingCart, ArrowLeft, Minus, Plus, User, BadgeCheck } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
@@ -111,7 +111,15 @@ export default function ProductDetail() {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Sold by</p>
-                <p className="text-sm font-medium">{seller?.username || seller?.full_name || product.seller_email}</p>
+                <div className="flex items-center gap-1.5">
+                  <p className="text-sm font-medium">{seller?.username || seller?.full_name || product.seller_email}</p>
+                  {seller?.company_verified && (
+                    <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-600 border border-blue-200 text-xs font-medium px-1.5 py-0.5 rounded-full">
+                      <BadgeCheck className="w-3 h-3" />
+                      Verified
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           )}
