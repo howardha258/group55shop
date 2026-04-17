@@ -22,7 +22,7 @@ export default function Navbar({ cartCount = 0 }) {
             <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center">
               <ShoppingBag className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="font-display text-xl font-bold text-foreground tracking-tight">Marché</span>
+            <span className="font-display text-xl font-bold text-foreground tracking-tight">Group 55 Shop</span>
           </Link>
 
           <div className="hidden sm:flex items-center gap-1">
