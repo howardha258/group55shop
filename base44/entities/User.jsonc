@@ -54,5 +54,14 @@
       "default": "none",
       "description": "Status of the company verification submission"
     }
-  }
+  },
+  "required": [
+    "username",
+    "profile_picture",
+    "bio",
+    "mobile",
+    "region",
+    "company_name",
+    "company_document_url"
+  ]
 }
